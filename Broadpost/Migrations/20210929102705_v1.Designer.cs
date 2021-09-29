@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Broadpost.Migrations
 {
     [DbContext(typeof(BroadpostDbContext))]
-    [Migration("20210924074323_v1")]
+    [Migration("20210929102705_v1")]
     partial class v1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,6 +40,12 @@ namespace Broadpost.Migrations
 
                     b.Property<string>("Tags")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TotalPost")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TotalUser")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -128,12 +134,21 @@ namespace Broadpost.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("Age")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Gender")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
                         .IsRequired()

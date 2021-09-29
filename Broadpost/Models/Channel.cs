@@ -35,16 +35,15 @@ namespace Broadpost.Models
         public int UserId { get; set; }
         public User User { get; set; }
 
+        public int TotalUser { get; set; } = 1;
+        public int TotalPost { get; set; } = 0;
+
 
         public List<Post> Posts { get; set; }
 
         public List<Invitation> Invitations { get; set; }
 
         public List<ChannelUser> ChannelUsers { get; set; }
-
-
-       // public List<ChannelTag> channelTags { get; set; }
-
 
     }
 }

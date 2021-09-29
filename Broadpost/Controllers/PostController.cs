@@ -70,6 +70,11 @@ namespace Broadpost.Controllers
                 {
                     using(var db = new BroadpostDbContext())
                     {
+                        //Updating total post in channel
+                        var channelEntity = db.Channels.FirstOrDefault(c => c.ChannelId == _channelId);
+                        channelEntity.TotalPost++;
+
+                        //Adding Post
                         post.UserId = _sessionUserId;
                         post.ChannelId = _channelId;
 

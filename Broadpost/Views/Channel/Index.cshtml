@@ -89,14 +89,32 @@
     function openModal(channelId) {
         var request = new XMLHttpRequest();
         request.addEventListener("load", function (event) {
-            //console.log(JSON.parse(event.target.responseText));
+            console.log(JSON.parse(event.target.responseText));
             let obj = JSON.parse(event.target.responseText);
 
             addDataToModal(obj,channelId); //calling addDataToModal
             
         })
+        var data = {
+            channelId: `${channelId}`
+        }
         request.open("POST", "User/getChannelUsers");
-        request.send();
+        request.setRequestHeader("Content-type", "application/json");
+        request.send(JSON.stringify(data));
+        //console.log("channel id = "+channelId);
+        //var data =
+        //{
+        //    ChannelId: `${channelId}`
+        //}
+
+        //$.ajax({
+        //    "type": "POST",
+        //    "url": '/User/getChannelUsers',
+        //    "dataType": "json",
+        //    "contentType": "application/json",
+        //    "data": JSON.stringify(data)
+        //})
+
     }
 
 

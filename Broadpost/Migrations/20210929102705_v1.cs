@@ -13,6 +13,9 @@ namespace Broadpost.Migrations
                 {
                     UserId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Gender = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Age = table.Column<int>(type: "int", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Region = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
@@ -37,7 +40,9 @@ namespace Broadpost.Migrations
                     Tags = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false)
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    TotalUser = table.Column<int>(type: "int", nullable: false),
+                    TotalPost = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {

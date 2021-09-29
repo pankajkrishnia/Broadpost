@@ -11,7 +11,14 @@ namespace Broadpost.Controllers
 {
     public class UserController : Controller
     {
-        
+        private int _sessionUserId;
+        private bool isSessionValid()
+        {
+            _sessionUserId = Convert.ToInt32(HttpContext.Session.GetString("UserId"));
+            byte[] data;
+            return HttpContext.Session.TryGetValue("UserId", out data);
+        }
+
         public ActionResult Index()
         {
             return View();
@@ -86,23 +93,30 @@ namespace Broadpost.Controllers
             return View(user);
         }
 
-
-        public string getChannelUsers()
+        
+        public string getChannelUsers([FromBody] ChannelIdBinderr obj)
         {
             using(var db = new BroadpostDbContext())
             {
-                var entities = from u in db.Users
-                               select new 
-                               { 
-                                    u.UserId,
-                                    u.UserName,
-                                    u.Region
-                               };
+                var channelId = obj.ChannelId;
+                isSessionValid();
+                var entity =  from u in db.Users
+                                where !(from cu in db.ChannelUsers
+                                        where cu.ChannelId == Convert.ToInt32(channelId)
+                                        select cu.UserId)
+                                        .Contains(u.UserId) && u.UserId != _sessionUserId
+                              select u;
 
                 return JsonConvert.SerializeObject(entities);
 
             }
         }
-
     }
+
+    public class ChannelIdBinderr
+    {
+        public string ChannelId { get; set; }
+    }
+
+
 }

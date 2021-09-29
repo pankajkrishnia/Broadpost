@@ -76,19 +76,26 @@ namespace Broadpost.Controllers
                 using (var db = new BroadpostDbContext())
                 {
                     var entity = db.Invitations.FirstOrDefault(i => i.ChannelId == invitation.ChannelId && i.ReceverUserId == _sessionUserId);
-                    if(invitation.Status == 1)
+                    if(invitation.Status == 1) //Accept Invitatiom
                     {
+                        //updating Total Users in channel
+                        var channelEntity = db.Channels.FirstOrDefault(c => c.ChannelId == invitation.ChannelId);
+                        channelEntity.TotalUser++;
+
+                        //Adding new channel user to ChannelUser
                         var channelUser = new ChannelUser();
                         channelUser.ChannelId = entity.ChannelId;
                         channelUser.UserId = entity.ReceverUserId;
 
                         db.ChannelUsers.Add(channelUser);
 
+                        //Removing from Invitation
                         db.Invitations.Remove(entity);
                         db.SaveChanges();
                     }
-                    else if(invitation.Status == 2)
+                    else if(invitation.Status == 2) //Decline Invitation
                     {
+                        //Removing from Invitation
                         db.Invitations.Remove(entity);
                         db.SaveChanges();
                     }
