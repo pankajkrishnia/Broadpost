@@ -1,0 +1,35 @@
+﻿@model Broadpost.Models.User
+
+@{
+    ViewData["Title"] = "Profile";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+
+<h2>Profile</h2>
+<hr />
+
+<div class="card mb-3">
+    <div class="row g-0">
+        <div class="col-md-4">
+            <img src="..." class="img-fluid rounded-start" alt="...">
+        </div>
+        <div class="col-md-8">
+            <div class="card-body">
+                <p><strong>@Html.DisplayNameFor(model => model.Email): </strong>@Html.DisplayFor(model => model.Email)</p>
+                <p><strong>@Html.DisplayNameFor(model => model.Region): </strong>@Html.DisplayFor(model => model.Email)</p>
+                <p><strong>@Html.DisplayNameFor(model => model.UserName): </strong>@Html.DisplayFor(model => model.UserName)</p>
+                <span class="card-texttext-muted">
+                    <small>
+                        @Html.DisplayNameFor(model => model.CreatedAt): @Html.DisplayFor(model => model.CreatedAt) |
+                        @Html.DisplayNameFor(model => model.UpdatedAt): @Html.DisplayFor(model => model.UpdatedAt)
+                    </small>
+                    <small class="d-block">
+                        <a asp-action="Edit" asp-route-id="@Model.UserId"><span class="btn btn-dark btn-sm">Edit</span></a>
+                    </small>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+

@@ -1,0 +1,29 @@
+﻿@model IEnumerable<Broadpost.Models.Post>
+
+@{
+    ViewData["Title"] = "Posts";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+
+<h3>@ViewBag.ChannelName</h3>
+
+<p>
+    <a asp-action="CreatePost">Create New Post</a>
+</p>
+
+@foreach (var item in ViewBag.postsInfo)
+{
+    <div class="card" >
+        <div class="card-body">
+            <small class="float-right">
+                <a asp-controller="Post" asp-action="EditPost" asp-route-id="@item.post.PostId">Edit</a> |
+                <a asp-controller="Post" asp-action="DeletePost" asp-route-id="@item.post.PostId">Delete</a>
+            </small>
+            <h5 class="card-title">@item.user.UserName</h5>
+            <h6 class="card-subtitle mb-2 text-muted"><small>@item.post.CreatedAt</small></h6>
+            <p class="card-text">@item.post.PostMessage</p>
+        </div>
+    </div>
+}
+
+

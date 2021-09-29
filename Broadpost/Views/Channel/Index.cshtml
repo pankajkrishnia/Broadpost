@@ -1,0 +1,153 @@
+﻿
+@{
+    ViewData["Title"] = "Channels";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+
+
+<h3>Channels</h3>
+
+<p>
+    <a asp-controller="Channel" asp-action="CreateChannel">Create New Channel</a>
+</p>
+<hr />
+
+
+<div class="row">
+
+    <div class="col-sm-6">
+        <h4>Personal Channels</h4>
+        <div class="list-group list-group-flush">
+            @foreach (var item in ViewBag.ChannelCreatedAndJoinedList[0])
+            {
+                <div class="list-group-item">
+                    <small class="float-right">
+                        <a asp-controller="Channel" asp-action="EditChannel" asp-route-id="@item.ChannelId">Edit</a> |
+                        <a asp-controller="Channel" asp-action="DeleteChannel" asp-route-id="@item.ChannelId">Delete</a>
+                    </small>
+                    <a asp-controller="Post" asp-action="SetChannelId" asp-route-id="@item.ChannelId" class="list-group-item-action text-secondary">
+                        <h5 class="mb-1">@item.ChannelName</h5>
+                        <h5 class="small font-italic">@item.CreatedAt</h5>
+                        <p class="mb-1">@item.ChannelDesc</p>
+                    </a>
+                    <small class="d-block">
+                        <span class="btn btn-dark btn-sm" onclick="openModal(@item.ChannelId)" data-toggle="modal" data-target="#exampleModalLong">Invite Users</span>
+                    </small>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <h4>Channels joined</h4>
+        <div class="list-group list-group-flush">
+            @foreach (var item in ViewBag.ChannelCreatedAndJoinedList[1])
+            {
+                <div class="list-group-item">
+                    <a asp-controller="Post" asp-action="SetChannelId" asp-route-id="@item.ChannelId" class="list-group-item-action text-secondary">
+                        <h5 class="mb-1">@item.ChannelName</h5>
+                        <h5 class="small font-italic">@item.CreatedAt</h5>
+                        <p class="mb-1">@item.ChannelDesc</p>
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Invite Users</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body" id="modalBody">
+                <!--modal body-->
+                
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div> 
+</div>
+
+
+
+
+
+
+
+
+
+<script>
+    function openModal(channelId) {
+        var request = new XMLHttpRequest();
+        request.addEventListener("load", function (event) {
+            //console.log(JSON.parse(event.target.responseText));
+            let obj = JSON.parse(event.target.responseText);
+
+            addDataToModal(obj,channelId); //calling addDataToModal
+            
+        })
+        request.open("POST", "User/getChannelUsers");
+        request.send();
+    }
+
+
+    function addDataToModal(obj,channelId)
+    {
+        let modalBody = document.getElementById("modalBody");
+
+        modalBody.innerHTML = '';
+        var ul = document.createElement("ul");
+        ul.setAttribute("class", "list-group");
+        for (let i in obj) {
+            var li = document.createElement("li");
+            li.setAttribute("class", "list-group-item");
+            li.innerHTML = obj[i].UserName;
+
+            var inviteBtn = document.createElement("button");
+            inviteBtn.setAttribute("class", "btn btn-secondary btn-sm float-right text-light");
+            inviteBtn.setAttribute("id", obj[i].UserId);
+            inviteBtn.innerHTML = "Invite";
+            li.appendChild(inviteBtn);
+
+            inviteBtn.addEventListener("click", () => {
+                sendInvitation(obj[i].UserId, channelId); //calling sendInvitation
+            })
+
+
+            ul.appendChild(li);
+
+        }
+        modalBody.appendChild(ul);
+    }
+
+
+    function sendInvitation(userId, channelId)
+    {
+        var data =
+        {
+            ReceverUserId: `${userId}`,
+            ChannelId: `${channelId}`
+        }
+
+        $.ajax({
+            "type": "POST",
+            "url": '/Invitation/Invite',
+            "dataType": "json",
+            "contentType": "application/json",
+            "data": JSON.stringify(data)
+        })
+    }
+
+</script>
+
+
+
