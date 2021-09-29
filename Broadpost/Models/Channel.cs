@@ -35,6 +35,8 @@ namespace Broadpost.Models
         public int UserId { get; set; }
         public User User { get; set; }
 
+        public string Admin {get;set;}
+
         public int TotalUser { get; set; } = 1;
         public int TotalPost { get; set; } = 0;
 

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Broadpost.Migrations
 {
     [DbContext(typeof(BroadpostDbContext))]
-    [Migration("20210929102705_v1")]
+    [Migration("20210929165752_v1")]
     partial class v1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,6 +27,9 @@ namespace Broadpost.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Admin")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ChannelDesc")
                         .HasColumnType("varchar(200)");

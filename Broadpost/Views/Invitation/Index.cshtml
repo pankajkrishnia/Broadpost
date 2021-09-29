@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Broadpost.Controllers.ChannelStatusBinderr>
+﻿
 
 @{
     ViewData["Title"] = "Index";
@@ -11,11 +11,11 @@
     @foreach (var item in ViewBag.invitations)
     {
         <li class="list-group-item list-group-item-success">
-            <h5>@item.channel.ChannelName</h5>
-            <small class="text-muted">@item.channel.UserId have sent you request to join his channel</small>
+            <h5>@item.ChannelName</h5>
+            <small class="text-muted"><b>@item.Admin</b> have sent you request to join his channel</small>
             <span class="float-right">
-                <button class="btn btn-sm btn-success text-white" onclick="AcceptDeclineInvitation(this.parentNode.parentNode.style.display = 'none',@item.channel.ChannelId, 1)">Accept</button>
-                <button class="btn btn-sm btn-danger text-white" onclick="AcceptDeclineInvitation(this.parentNode.parentNode.style.display = 'none',@item.channel.ChannelId, 2)">Decline</button>
+                <button class="btn btn-sm btn-success text-white" onclick="AcceptDeclineInvitation(this.parentNode.parentNode.style.display = 'none',@item.ChannelId, 1)">Accept</button>
+                <button class="btn btn-sm btn-danger text-white" onclick="AcceptDeclineInvitation(this.parentNode.parentNode.style.display = 'none',@item.ChannelId, 2)">Decline</button>
             </span>
         </li>
     }

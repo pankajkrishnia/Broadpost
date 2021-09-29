@@ -12,9 +12,12 @@ namespace Broadpost.Controllers
     public class ChannelController : Controller
     {
         private int _sessionUserId;
+        private string _userName;
+
         private bool isSessionValid()
         {
             _sessionUserId = Convert.ToInt32(HttpContext.Session.GetString("UserId"));
+            _userName = HttpContext.Session.GetString("UserName");
             byte[] data;
             return HttpContext.Session.TryGetValue("UserId", out data);
         }
@@ -28,23 +31,14 @@ namespace Broadpost.Controllers
                 {
                     var userPersonalChannels = db.Channels.Where(c => c.UserId == _sessionUserId).ToList();
 
-
-                    //var joinedChannel = db.ChannelUsers.Where(cu => cu.UserId == _sessionUserId).ToList();
-
-                    //var userJoinedChannels = new List<Channel>();
-                    //foreach (var item in joinedChannel)
-                    //{
-                    //    var chnl = db.Channels.FirstOrDefault(c => c.ChannelId == item.ChannelId);
-                    //    userJoinedChannels.Add(chnl);
-                    //}
-
                     var userJoinedChannelsId = from cu in db.ChannelUsers
-                                               where cu.UserId == _sessionUserId
+                                               where cu.UserId == _sessionUserId 
                                                select cu;
 
                     var userJoinedChannels = (from c in db.Channels
                                               join ci in userJoinedChannelsId
                                               on c.ChannelId equals ci.ChannelId
+                                              where c.UserId != _sessionUserId
                                               select c).ToList();
 
                     var userChannels = new ArrayList() { userPersonalChannels, userJoinedChannels };
@@ -74,8 +68,21 @@ namespace Broadpost.Controllers
                         var entity = db.Channels.FirstOrDefault(c => c.ChannelName == channel.ChannelName);
                         if (entity == null)
                         {
+                            //adding new channel
                             channel.UserId = _sessionUserId;
+                            channel.Admin = _userName;
+
                             db.Channels.Add(channel);
+                            db.SaveChanges();
+
+
+                            //updating ChannelUsers
+                            var ch = db.Channels.FirstOrDefault(c => c.ChannelName == channel.ChannelName);
+                            var channelUser = new ChannelUser();
+                            channelUser.UserId = ch.UserId;
+                            channelUser.ChannelId = ch.ChannelId;
+
+                            db.ChannelUsers.Add(channelUser);
                             db.SaveChanges();
 
                             return RedirectToAction(nameof(Index));

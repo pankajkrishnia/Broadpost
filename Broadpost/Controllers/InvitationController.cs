@@ -32,11 +32,7 @@ namespace Broadpost.Controllers
                 var entitys = (from c in db.Channels
                              join us in entity
                              on c.ChannelId equals us.ChannelId
-                             select new ChannelStatusBinderr
-                             {
-                                 channel = c,
-                                 status = us.Status
-                             }).ToList();
+                             select c).ToList();
 
                 ViewBag.invitations = entitys;
 
@@ -107,11 +103,4 @@ namespace Broadpost.Controllers
     }
 
 
-
-
-    public class ChannelStatusBinderr
-    {
-        public Channel channel { get; set; }
-        public int status { get; set; }
-    }
 }

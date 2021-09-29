@@ -41,6 +41,7 @@ namespace Broadpost.Migrations
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
+                    Admin = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TotalUser = table.Column<int>(type: "int", nullable: false),
                     TotalPost = table.Column<int>(type: "int", nullable: false)
                 },

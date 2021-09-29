@@ -26,6 +26,9 @@ namespace Broadpost.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Admin")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ChannelDesc")
                         .HasColumnType("varchar(200)");
 
@@ -195,7 +198,7 @@ namespace Broadpost.Migrations
                     b.HasOne("Broadpost.Models.Channel", "Channel")
                         .WithMany("ChannelUsers")
                         .HasForeignKey("ChannelId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Broadpost.Models.User", "User")
@@ -214,7 +217,7 @@ namespace Broadpost.Migrations
                     b.HasOne("Broadpost.Models.Channel", "Channel")
                         .WithMany("Invitations")
                         .HasForeignKey("ChannelId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Broadpost.Models.User", "User")
@@ -233,7 +236,7 @@ namespace Broadpost.Migrations
                     b.HasOne("Broadpost.Models.Channel", "Channel")
                         .WithMany("Posts")
                         .HasForeignKey("ChannelId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Broadpost.Models.User", "User")

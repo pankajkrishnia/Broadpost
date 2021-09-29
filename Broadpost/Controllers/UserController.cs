@@ -11,13 +11,6 @@ namespace Broadpost.Controllers
 {
     public class UserController : Controller
     {
-        private int _sessionUserId;
-        private bool isSessionValid()
-        {
-            _sessionUserId = Convert.ToInt32(HttpContext.Session.GetString("UserId"));
-            byte[] data;
-            return HttpContext.Session.TryGetValue("UserId", out data);
-        }
 
         public ActionResult Index()
         {
@@ -44,6 +37,7 @@ namespace Broadpost.Controllers
                 }
 
                 HttpContext.Session.SetString("UserId", entity.UserId.ToString());
+                HttpContext.Session.SetString("UserName", entity.UserName.ToString());
                 return RedirectToAction("Index","Dashboard");
             }
         }
@@ -99,13 +93,20 @@ namespace Broadpost.Controllers
             using(var db = new BroadpostDbContext())
             {
                 var channelId = obj.ChannelId;
-                isSessionValid();
-                var entity =  from u in db.Users
+
+                var entities =  from u in db.Users
                                 where !(from cu in db.ChannelUsers
                                         where cu.ChannelId == Convert.ToInt32(channelId)
                                         select cu.UserId)
-                                        .Contains(u.UserId) && u.UserId != _sessionUserId
-                              select u;
+                                        .Contains(u.UserId) &&
+                                        !(from i in db.Invitations
+                                          select i.ReceverUserId)
+                                          .Contains(u.UserId)
+                              select new 
+                              { 
+                                u.UserId,
+                                u.UserName
+                              };
 
                 return JsonConvert.SerializeObject(entities);
 

@@ -86,10 +86,11 @@
 
 
 <script>
+    //open modal
     function openModal(channelId) {
         var request = new XMLHttpRequest();
         request.addEventListener("load", function (event) {
-            console.log(JSON.parse(event.target.responseText));
+            //console.log(JSON.parse(event.target.responseText));
             let obj = JSON.parse(event.target.responseText);
 
             addDataToModal(obj,channelId); //calling addDataToModal
@@ -101,23 +102,9 @@
         request.open("POST", "User/getChannelUsers");
         request.setRequestHeader("Content-type", "application/json");
         request.send(JSON.stringify(data));
-        //console.log("channel id = "+channelId);
-        //var data =
-        //{
-        //    ChannelId: `${channelId}`
-        //}
-
-        //$.ajax({
-        //    "type": "POST",
-        //    "url": '/User/getChannelUsers',
-        //    "dataType": "json",
-        //    "contentType": "application/json",
-        //    "data": JSON.stringify(data)
-        //})
-
     }
 
-
+    //add data to modal
     function addDataToModal(obj,channelId)
     {
         let modalBody = document.getElementById("modalBody");
@@ -131,13 +118,13 @@
             li.innerHTML = obj[i].UserName;
 
             var inviteBtn = document.createElement("button");
-            inviteBtn.setAttribute("class", "btn btn-secondary btn-sm float-right text-light");
+            inviteBtn.setAttribute("class", "btn btn-success btn-sm float-right text-light");
             inviteBtn.setAttribute("id", obj[i].UserId);
             inviteBtn.innerHTML = "Invite";
             li.appendChild(inviteBtn);
 
             inviteBtn.addEventListener("click", () => {
-                sendInvitation(obj[i].UserId, channelId); //calling sendInvitation
+                sendInvitation(obj[i].UserId, channelId, inviteBtn); //calling sendInvitation
             })
 
 
@@ -147,8 +134,8 @@
         modalBody.appendChild(ul);
     }
 
-
-    function sendInvitation(userId, channelId)
+    //send Invitation
+    function sendInvitation(userId, channelId, inviteBtn)
     {
         var data =
         {
@@ -156,13 +143,27 @@
             ChannelId: `${channelId}`
         }
 
-        $.ajax({
-            "type": "POST",
-            "url": '/Invitation/Invite',
-            "dataType": "json",
-            "contentType": "application/json",
-            "data": JSON.stringify(data)
+        //$.ajax({
+        //    "type": "POST",
+        //    "url": '/Invitation/Invite',
+        //    "dataType": "json",
+        //    "contentType": "application/json",
+        //    "data": JSON.stringify(data)
+        //}).done(function (data) { alert("success"); })
+        //    .fail(function () { alert("error"); })
+        //    .always(function () { alert("complete"); });
+
+
+        var request = new XMLHttpRequest();
+        request.addEventListener("load", function (event) {
+            console.log(event.target.responseText);
+            inviteBtn.innerHTML = "Invited";
+            inviteBtn.disabled = true;
+
         })
+        request.open("POST", "/Invitation/Invite");
+        request.setRequestHeader("Content-type", "application/json");
+        request.send(JSON.stringify(data));
     }
 
 </script>
