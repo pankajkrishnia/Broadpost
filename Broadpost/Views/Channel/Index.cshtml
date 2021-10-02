@@ -28,6 +28,10 @@
                     <a asp-controller="Post" asp-action="SetChannelId" asp-route-id="@item.ChannelId" class="list-group-item-action text-secondary">
                         <h5 class="mb-1">@item.ChannelName</h5>
                         <h5 class="small font-italic">@item.CreatedAt</h5>
+                        <h5 class="small font-italic">
+                            Total Users: @item.TotalUser 
+                            Total Posts: @item.TotalPost
+                        </h5>
                         <p class="mb-1">@item.ChannelDesc</p>
                     </a>
                     <small class="d-block">
@@ -46,6 +50,10 @@
                     <a asp-controller="Post" asp-action="SetChannelId" asp-route-id="@item.ChannelId" class="list-group-item-action text-secondary">
                         <h5 class="mb-1">@item.ChannelName</h5>
                         <h5 class="small font-italic">@item.CreatedAt</h5>
+                        <h5 class="small font-italic">
+                            Total Users: @item.TotalUser
+                            Total Posts: @item.TotalPost
+                        </h5>
                         <p class="mb-1">@item.ChannelDesc</p>
                     </a>
                 </div>
@@ -115,7 +123,7 @@
         for (let i in obj) {
             var li = document.createElement("li");
             li.setAttribute("class", "list-group-item");
-            li.innerHTML = obj[i].UserName;
+            li.innerHTML = obj[i].Name;
 
             var inviteBtn = document.createElement("button");
             inviteBtn.setAttribute("class", "btn btn-success btn-sm float-right text-light");
@@ -124,6 +132,8 @@
             li.appendChild(inviteBtn);
 
             inviteBtn.addEventListener("click", () => {
+                inviteBtn.innerHTML = "Invited";
+                inviteBtn.disabled = true;
                 sendInvitation(obj[i].UserId, channelId, inviteBtn); //calling sendInvitation
             })
 
@@ -157,8 +167,8 @@
         var request = new XMLHttpRequest();
         request.addEventListener("load", function (event) {
             console.log(event.target.responseText);
-            inviteBtn.innerHTML = "Invited";
-            inviteBtn.disabled = true;
+            //inviteBtn.innerHTML = "Invited";
+            //inviteBtn.disabled = true;
 
         })
         request.open("POST", "/Invitation/Invite");

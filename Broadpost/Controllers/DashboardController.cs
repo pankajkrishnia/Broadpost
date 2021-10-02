@@ -65,34 +65,40 @@ namespace Broadpost.Controllers
         {
             if (isSessionValid())
             {
-                using (var db = new BroadpostDbContext())
+                if(id == _sessionUserId)
                 {
-                    var entity = db.Users.FirstOrDefault(u=>u.UserId == id);
-                    if (entity == null)
+                    using (var db = new BroadpostDbContext())
                     {
-                        return NotFound();
+                        var entity = db.Users.FirstOrDefault(u=>u.UserId == id);
+                        if (entity == null)
+                        {
+                            return NotFound();
+                        }
+                        return View(entity);
                     }
-                    return View(entity);
                 }
+                return RedirectToAction(nameof(Profile));
             }
             return RedirectToAction("Login", "User");
         }
 
         [HttpPost,ValidateAntiForgeryToken]
-        public ActionResult EditProfile(int id, User user)
+        public ActionResult EditProfile(User user)
         {
             if (isSessionValid())
             {
-                if (id == user.UserId)
+                if (user.UserId == _sessionUserId)
                 {
                     if (ModelState.IsValid)
                     {
                         using (var db = new BroadpostDbContext())
                         {
-                            var entity = db.Users.FirstOrDefault(c => c.UserId == id);
+                            var entity = db.Users.FirstOrDefault(c => c.UserId == user.UserId);
                             entity.UserName = user.UserName;
                             entity.Email = user.Email;
                             entity.Region = user.Region;
+                            entity.Gender = user.Gender;
+                            entity.Age = user.Age;
                             entity.UpdatedAt = DateTime.Now;
 
                             db.SaveChanges();
@@ -108,5 +114,52 @@ namespace Broadpost.Controllers
         }
 
 
+        //Change Password============================================================================
+        public ActionResult ChangePassword(int? id)
+        {
+            if (isSessionValid())
+            {
+                if(id == _sessionUserId)
+                {
+                    ChangePassword changePassword = new ChangePassword
+                    {
+                        UserId = (int)id
+                    };
+                    return View(changePassword);
+                }
+                return RedirectToAction("Profile");
+            }
+            return RedirectToAction("Login", "User");
+        }
+
+        [HttpPost, AutoValidateAntiforgeryToken]
+        public ActionResult ChangePassword(ChangePassword userPassword)
+        {
+            if (isSessionValid())
+            {
+                if(userPassword.UserId == _sessionUserId)
+                {
+                    using (var db = new BroadpostDbContext())
+                    {
+                        var entity = db.Users.FirstOrDefault(u => u.UserId == _sessionUserId);
+                        if(entity.Password == userPassword.CurrentPassword)
+                        {
+                            entity.Password = userPassword.NewPassword;
+                            entity.PasswordVerify = userPassword.PasswordVerify;
+
+                            db.SaveChanges();
+
+                            ViewBag.message = "Password changed successfully";
+                            return View();
+                        }
+                        ViewBag.message = "Current Password is Wrong";
+                        return View();
+                    }
+                }
+                return RedirectToAction("Profile");
+            }
+            return RedirectToAction("Login", "User");
+        }
     }
+
 }

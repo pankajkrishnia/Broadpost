@@ -12,12 +12,12 @@ namespace Broadpost.Controllers
     public class ChannelController : Controller
     {
         private int _sessionUserId;
-        private string _userName;
+        private string _sessionUserName;
 
         private bool isSessionValid()
         {
             _sessionUserId = Convert.ToInt32(HttpContext.Session.GetString("UserId"));
-            _userName = HttpContext.Session.GetString("UserName");
+            _sessionUserName = HttpContext.Session.GetString("UserName");
             byte[] data;
             return HttpContext.Session.TryGetValue("UserId", out data);
         }
@@ -70,7 +70,7 @@ namespace Broadpost.Controllers
                         {
                             //adding new channel
                             channel.UserId = _sessionUserId;
-                            channel.Admin = _userName;
+                            channel.Admin = _sessionUserName;
 
                             db.Channels.Add(channel);
                             db.SaveChanges();

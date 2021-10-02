@@ -5,15 +5,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Broadpost.Models;
+using Broadpost.Mail;
 
 namespace Broadpost.Controllers
 {
     public class InvitationController : Controller
     {
         private int _sessionUserId;
+        private string _sessionUserName;
         private bool isSessionValid()
         {
             _sessionUserId = Convert.ToInt32(HttpContext.Session.GetString("UserId"));
+            _sessionUserName = HttpContext.Session.GetString("UserName");
             byte[] data;
             return HttpContext.Session.TryGetValue("UserId", out data);
         }
@@ -56,8 +59,22 @@ namespace Broadpost.Controllers
                                                         && i.ReceverUserId == invitation.ReceverUserId);
                     if(entity == null)
                     {
+                        //Adding invite in Invitation
                         db.Invitations.Add(invitation);
                         db.SaveChanges();
+
+                        //Sending Invitation Mail
+                        var reciverUserEntity = (from u in db.Users where u.UserId == invitation.ReceverUserId
+                                                select new { u.Name, u.Email}).FirstOrDefault();
+                        var channelName = db.Channels.FirstOrDefault(c => c.ChannelId == invitation.ChannelId).ChannelName;
+                        MailModel mail = new MailModel()
+                        {
+                            ReceiverName = reciverUserEntity.Name,
+                            ReceiverAddress = reciverUserEntity.Email,
+                            Subject = "New Channel Join Request",
+                            Message = $"{_sessionUserName} have sent you request to join his channel \"{channelName}\""
+                        };
+                        MailHandler.SendMail(mail);
                     }
                 }
             }
