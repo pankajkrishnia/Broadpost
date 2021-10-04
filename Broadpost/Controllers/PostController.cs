@@ -97,11 +97,11 @@ namespace Broadpost.Controllers
                 using(var db = new BroadpostDbContext())
                 {
                     var entity = db.Posts.FirstOrDefault(p=> p.PostId == id);
-                    if(entity == null)
+                    if(entity != null && entity.UserId == _sessionUserId)
                     {
-                        return NotFound();
+                        return View(entity);
                     }
-                    return View(entity);
+                    return RedirectToAction("Index");
                 }
             }
             return RedirectToAction("Login", "User");
@@ -135,15 +135,28 @@ namespace Broadpost.Controllers
         }
 
         //Delete Post============================================================================
-        public ActionResult DeletePost(int id)
+        public ActionResult DeletePost(int? id)
         {
-            return View();
-        }
+            if (isSessionValid())
+            {
+                using (var db = new BroadpostDbContext())
+                {
+                    var postEntity = db.Posts.Find(id);
+                    if (postEntity != null && postEntity.UserId == _sessionUserId)
+                    {
+                        //Channel Entity
+                        var channelEntity = db.Channels.Find(postEntity.ChannelId);
+                        channelEntity.TotalPost--;
 
-        [HttpPost, ValidateAntiForgeryToken]
-        public ActionResult DeletePost(int id, Post post)
-        {
-            return View();
+                        //Post Entity
+                        db.Posts.Remove(postEntity);
+
+                        db.SaveChanges();
+                    }
+                    return RedirectToAction("Index");
+                }
+            }
+            return RedirectToAction("Login", "User");
         }
     }
 

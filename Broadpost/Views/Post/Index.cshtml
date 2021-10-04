@@ -17,7 +17,7 @@
         <div class="card-body">
             <small class="float-right">
                 <a asp-controller="Post" asp-action="EditPost" asp-route-id="@item.post.PostId">Edit</a> |
-                <a asp-controller="Post" asp-action="DeletePost" asp-route-id="@item.post.PostId">Delete</a>
+                <a class="text-primary" style="cursor:pointer" onclick="ConfirmDelete(@item.post.PostId)">Delete</a>
             </small>
             <h5 class="card-title">@item.user.UserName</h5>
             <h6 class="card-subtitle mb-2 text-muted"><small>@item.post.CreatedAt</small></h6>
@@ -25,5 +25,15 @@
         </div>
     </div>
 }
+
+<script>
+    //confirm delete
+    function ConfirmDelete(postId) {
+        if (confirm("Are you sure you want to delete?")) {
+            window.location.href = '/Post/DeletePost/' + postId;
+        }
+    }
+
+</script>
 
 

@@ -125,7 +125,7 @@ namespace Broadpost.Controllers
         {
             if (isSessionValid())
             {
-                if (id == channel.ChannelId && Convert.ToInt32(channel.UserId) == _sessionUserId)
+                if (id == channel.ChannelId && channel.UserId == _sessionUserId)
                 {
                     if (ModelState.IsValid)
                     {
@@ -151,8 +151,34 @@ namespace Broadpost.Controllers
         //Delete Channel============================================================================
         public ActionResult DeleteChannel(int? id)
         {
-            //Pass----panding
-            return View();
+            if (isSessionValid())
+            {
+                using (var db = new BroadpostDbContext())
+                {
+                    var channelEntity = db.Channels.Find(id);
+                    if (channelEntity != null && channelEntity.UserId == _sessionUserId)
+                    {
+                        //ChannelUsers Entities
+                        var channelUserEntities = db.ChannelUsers.Where(cu => cu.ChannelId == id).ToList();
+                        db.ChannelUsers.RemoveRange(channelUserEntities);
+
+                        //Invitation Entitys
+                        var invitationEntities = db.Invitations.Where(i => i.ChannelId == id).ToList();
+                        db.Invitations.RemoveRange(invitationEntities);
+
+                        //Posts Entities
+                        var postEntities = db.Posts.Where(p => p.ChannelId == id).ToList();
+                        db.Posts.RemoveRange(postEntities);
+
+                        //Channel Entity
+                        db.Channels.Remove(channelEntity);
+
+                        db.SaveChanges();
+                    }
+                    return RedirectToAction("Index");
+                }
+            }
+            return RedirectToAction("Login","User");
         }
 
     }

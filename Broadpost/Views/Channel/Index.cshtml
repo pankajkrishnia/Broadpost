@@ -23,7 +23,7 @@
                 <div class="list-group-item">
                     <small class="float-right">
                         <a asp-controller="Channel" asp-action="EditChannel" asp-route-id="@item.ChannelId">Edit</a> |
-                        <a asp-controller="Channel" asp-action="DeleteChannel" asp-route-id="@item.ChannelId">Delete</a>
+                        <a class="text-primary" style="cursor:pointer" onclick="ConfirmDelete(@item.ChannelId)">Delete</a>
                     </small>
                     <a asp-controller="Post" asp-action="SetChannelId" asp-route-id="@item.ChannelId" class="list-group-item-action text-secondary">
                         <h5 class="mb-1">@item.ChannelName</h5>
@@ -35,7 +35,7 @@
                         <p class="mb-1">@item.ChannelDesc</p>
                     </a>
                     <small class="d-block">
-                        <span class="btn btn-dark btn-sm" onclick="openModal(@item.ChannelId)" data-toggle="modal" data-target="#exampleModalLong">Invite Users</span>
+                        <span class="btn btn-dark btn-sm" onclick="openModal(@item.ChannelId)" data-toggle="modal" data-target="#inviteModalLong" style="cursor:pointer">Invite Users</span>
                     </small>
                 </div>
             }
@@ -63,11 +63,11 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+<div class="modal fade" id="inviteModalLong" tabindex="-1" role="dialog" aria-labelledby="inviteModalLongTitle" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Invite Users</h5>
+                <h5 class="modal-title" id="inviteModalLongTitle">Invite Users</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -94,6 +94,14 @@
 
 
 <script>
+    //confirm delete
+    function ConfirmDelete(channelId) {
+        if (confirm("Are you sure you want to delete?")) {
+            window.location.href = '/Channel/DeleteChannel/' + channelId;
+        }
+    }
+
+
     //open modal
     function openModal(channelId) {
         var request = new XMLHttpRequest();
