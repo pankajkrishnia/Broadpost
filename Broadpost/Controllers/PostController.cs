@@ -68,21 +68,25 @@ namespace Broadpost.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    using(var db = new BroadpostDbContext())
+                    if (post.PostMessage != null)
                     {
-                        //Updating total post in channel
-                        var channelEntity = db.Channels.FirstOrDefault(c => c.ChannelId == _channelId);
-                        channelEntity.TotalPost++;
+                        using (var db = new BroadpostDbContext())
+                        {
+                            //Updating total post in channel
+                            var channelEntity = db.Channels.FirstOrDefault(c => c.ChannelId == _channelId);
+                            channelEntity.TotalPost++;
 
-                        //Adding Post
-                        post.UserId = _sessionUserId;
-                        post.ChannelId = _channelId;
+                            //Adding Post
+                            post.UserId = _sessionUserId;
+                            post.ChannelId = _channelId;
 
-                        db.Posts.Add(post);
-                        db.SaveChanges();
+                            db.Posts.Add(post);
+                            db.SaveChanges();
 
-                        return RedirectToAction(nameof(Index));
+                            return RedirectToAction(nameof(Index));
+                        }
                     }
+                    ViewBag.message = "Post can't be empty";
                 }
                 return View(post);
             }

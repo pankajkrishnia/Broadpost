@@ -15,10 +15,10 @@
 {
     <div class="card" >
         <div class="card-body">
-            <small class="float-right">
-                <a asp-controller="Post" asp-action="EditPost" asp-route-id="@item.post.PostId">Edit</a> |
-                <a class="text-primary" style="cursor:pointer" onclick="ConfirmDelete(@item.post.PostId)">Delete</a>
-            </small>
+            <span class="float-right">
+                <a asp-controller="Post" asp-action="EditPost" asp-route-id="@item.post.PostId" class="bi-pen"></a> |
+                <a style="cursor:pointer" onclick="ConfirmDelete(@item.post.PostId)" class="bi-archive-fill text-danger"></a>
+            </span>
             <h5 class="card-title">@item.user.UserName</h5>
             <h6 class="card-subtitle mb-2 text-muted"><small>@item.post.CreatedAt</small></h6>
             <p class="card-text">@item.post.PostMessage</p>

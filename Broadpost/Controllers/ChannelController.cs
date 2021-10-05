@@ -29,7 +29,7 @@ namespace Broadpost.Controllers
             {
                 using (var db = new BroadpostDbContext())
                 {
-                    var userPersonalChannels = db.Channels.Where(c => c.UserId == _sessionUserId).ToList();
+                    var userPersonalChannels = db.Channels.Where(c => c.UserId == _sessionUserId).OrderBy(c=>c.TotalPost).ToList();
 
                     var userJoinedChannelsId = from cu in db.ChannelUsers
                                                where cu.UserId == _sessionUserId 
@@ -39,7 +39,7 @@ namespace Broadpost.Controllers
                                               join ci in userJoinedChannelsId
                                               on c.ChannelId equals ci.ChannelId
                                               where c.UserId != _sessionUserId
-                                              select c).ToList();
+                                              select c).OrderBy(c=>c.TotalUser).ToList();
 
                     var userChannels = new ArrayList() { userPersonalChannels, userJoinedChannels };
 

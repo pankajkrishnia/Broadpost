@@ -21,10 +21,10 @@
             @foreach (var item in ViewBag.ChannelCreatedAndJoinedList[0])
             {
                 <div class="list-group-item">
-                    <small class="float-right">
-                        <a asp-controller="Channel" asp-action="EditChannel" asp-route-id="@item.ChannelId">Edit</a> |
-                        <a class="text-primary" style="cursor:pointer" onclick="ConfirmDelete(@item.ChannelId)">Delete</a>
-                    </small>
+                    <span class="float-right">
+                        <a asp-controller="Channel" asp-action="EditChannel" asp-route-id="@item.ChannelId" class="bi-pen"></a> |
+                        <a style="cursor:pointer" onclick="ConfirmDelete(@item.ChannelId)" class="bi-archive-fill text-info"></a>
+                    </span>
                     <a asp-controller="Post" asp-action="SetChannelId" asp-route-id="@item.ChannelId" class="list-group-item-action text-secondary">
                         <h5 class="mb-1">@item.ChannelName</h5>
                         <h5 class="small font-italic">@item.CreatedAt</h5>
@@ -35,7 +35,7 @@
                         <p class="mb-1">@item.ChannelDesc</p>
                     </a>
                     <small class="d-block">
-                        <span class="btn btn-dark btn-sm" onclick="openModal(@item.ChannelId)" data-toggle="modal" data-target="#inviteModalLong" style="cursor:pointer">Invite Users</span>
+                        <span class="btn btn-outline-secondary btn-sm bi bi-person-plus-fill" onclick="openModal(@item.ChannelId)" data-toggle="modal" data-target="#inviteModalLong" style="cursor:pointer"> Invite</span>
                     </small>
                 </div>
             }
@@ -134,13 +134,15 @@
             li.innerHTML = obj[i].Name;
 
             var inviteBtn = document.createElement("button");
-            inviteBtn.setAttribute("class", "btn btn-success btn-sm float-right text-light");
+            inviteBtn.setAttribute("class", "bi bi-person-plus text-success float-right");
             inviteBtn.setAttribute("id", obj[i].UserId);
-            inviteBtn.innerHTML = "Invite";
+            inviteBtn.innerHTML = " Invite";
+            inviteBtn.style.border = "none";
+            inviteBtn.style.background = "none";
             li.appendChild(inviteBtn);
 
             inviteBtn.addEventListener("click", () => {
-                inviteBtn.innerHTML = "Invited";
+                inviteBtn.innerHTML = " Invited";
                 inviteBtn.disabled = true;
                 sendInvitation(obj[i].UserId, channelId, inviteBtn); //calling sendInvitation
             })
