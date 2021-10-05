@@ -37,7 +37,7 @@ namespace Broadpost.Controllers
                                      on u.UserId equals p.UserId
                                      select new UserPost
                                      {
-                                         user = u,
+                                         userName = u.UserName,
                                          post = p
                                      }).ToList();
 
@@ -166,7 +166,7 @@ namespace Broadpost.Controllers
 
     public class UserPost
     {
-        public User user { get; set; }
+        public string userName { get; set; }
         public Post post { get; set; }
     }
 }

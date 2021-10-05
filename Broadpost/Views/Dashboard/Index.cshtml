@@ -5,11 +5,68 @@
     Layout = "~/Views/Shared/_UserLayout.cshtml";
 }
 
-<div class="text-center">
+<div>
+    <h3>Top Trends</h3>
+    <hr />
+    <div class="table">
+        <div class="row my-2">
+            <div class="col-sm-6">
+                <div class="list-group list-group-flush">
+                    <h5 class="list-group-item list-group-item-secondary">Trending Channels</h5>
+                    @foreach (var channel in ViewBag.trendings[0])
+                    {
+                        <div class="list-group-item d-flex justify-content-between">
+                            @channel.ChannelName
+                            <small class="text-muted">Total Posts: @channel.TotalPost</small>
 
-    <h4>Your most Welcome @Model.UserName</h4>
-    <p>This is your Dashboard Explore it and do not forgot that Channel section :)</p>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="list-group list-group-flush">
+                    <h5 class="list-group-item list-group-item-secondary">Trending Tags</h5>
+                    @foreach (var kv in ViewBag.trendings[1])
+                    {
+                        <div class="list-group-item d-flex justify-content-between">
+                            @kv.Key
+                            <small class="text-muted">Popularity: @kv.Value</small>
 
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="row my-2">
+            <div class="col-sm-6">
+                <div class="list-group list-group-flush">
+                    <h5 class="list-group-item list-group-item-success">Trending Regions</h5>
+                    @foreach (var kv in ViewBag.trendings[2])
+                    {
+                        <div class="list-group-item d-flex justify-content-between">
+                            @kv.Key
+                            <small class="text-muted">Total Users: @kv.Value</small>
+
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="list-group list-group-flush">
+                    <h5 class="list-group-item list-group-item-success">Trending Users</h5>
+                    @foreach (var kv in ViewBag.trendings[3])
+                    {
+                        <div class="list-group-item d-flex justify-content-between">
+                            @kv.Key
+                            <small class="text-muted">Total Posts: @kv.Value</small>
+
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 
